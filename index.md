@@ -261,7 +261,7 @@ for ($i = 1;$i -le 5;$i++)
 
 ![图 11](images/59df85f53f12b724b9340567132513f2176cbe93752370f9376bae2cb0351e52.png)  
 
-准备一个 `aspx` 我为了这个去网上学了 ASP.NET 入门之后发现 `aspx` 这个 Web Form 的开发框架早就被淘汰了……
+准备一个 `aspx` 我为了这个去网上学了 ASP.NET 入门之后发现 `AST.NET Web Form` 这个开发框架早就被淘汰了……
 
 ```c#
 <html>
@@ -271,6 +271,72 @@ for ($i = 1;$i -le 5;$i++)
 </body>
 </html>
 ```
+
+在默认文档设置中，将 `index.aspx` 设置成默认文档
+
+![Default Page](images/fbbd394151f4100ffad64547352eaba62be839f7d0ef1f1fea7f5b3ac734efee.png)  
+
+直接使用域证书签发，签发给 `web.ChinaSkills.cn`
+
+![图 4](images/66a7ed9db1913799834f2fd10d053e95deb034c11e02a2b40b1e56abc8c45a5f.png)  
+
+去新增绑定 443 端口，指定证书为新签发的证书
+
+![图 5](images/e725cd874c142b0dbe7783677b33d7ed4290d4d11fa2966e631cdd767a9b7c55.png)  
+
+去 DNS 新增 CNAME 记录指向 Server01 即可
+
+用浏览器访问 `https://web.chinaskills.cn`,注意每次刷新时间会有变化
+
+![图 6](images/3d805e4b5c57d65240e1149f4edbe59e7e5d00a842b8f5a2fae865100db521e3.png)  
+
+## Server02
+
+RAID-1 在 Windows 中被称作镜像卷，非常形象
+
+正常新建卷即可
+
+但是，动态磁盘不支持使用 BitLocker
+
+![图 7](images/9a2f9da5fd8ea670cc43d65f2cac210d6bc4994f9309fdf62a15c2e5b313344b.png)  
+
+所以只能用 Windows Server 存储池
+
+打开服务器管理器，打开左侧的 `文件和存储服务`,新增磁盘后新建存储池
+
+勾选全部物理磁盘，保持自动分配即可
+
+![图 8](images/95f6134995a3100ccdd8d256c210ba7524cf2786fa4f10d05c055a35ae7ac63f.png)  
+
+创建好存储池后紧接着创建虚拟磁盘
+
+![图 9](images/e3a8222820ae55460c5c4f86b16ffa32736fffd35caacff914c984b17eaa584c.png)  
+
+选择 `Mirror` 布局 (实质就是 RAID 1)
+
+![图 10](images/e1d1c1972d0fd8d09ede435109b1e511d731a52e0712c9c9a52a72749e3c20ed.png)  
+
+创建即可
+
+最后创建卷并格式化即可
+
+打开资源管理器，右键新增的 `I` 盘，选择 `启用 BitLocker`
+
+![图 11](images/3088297b90396fc93fc7a9560214a19c1b651bb93582b53e69571f48d98d580d.png)  
+
+按照向导步骤加密即可
+
+## Server03
+
+出题的人你们自己做题了吗？
+
+POP3 根本没法做，还是说你们让我们部署 Exchange ?
+
+Windows Server 自带 POP3 是 Windows Server 2003 年代的事了！
+
+磁盘给谁配额？系统盘？还是不知道哪来的数据盘？
+
+你们这个题是从啥地方扒下来的，扒都扒不明白
 
 ## GWServer
 

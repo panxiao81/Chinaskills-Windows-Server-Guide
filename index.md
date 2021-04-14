@@ -1,5 +1,13 @@
 # Windows 环境题解与解析
 
+<!--
+To Do List
+- DFS 复制
+- WSUS
+- DFS 共享
+- RemoteApp
+-->
+
 ## 一些通用项目
 
 可以使用 `Sconfig.cmd` 实用工具对 Windows Server 快速配置
@@ -133,7 +141,9 @@ for($i = 1;$i -le 10;$i++)
 
 `计算机设置 -> 策略 -> Windows 设置 -> 安全设置 -> 本地策略 -> 审核策略`
 
-开启 `审核登录时间` 与 `审核账户登录事件` ，将成功与失败都勾选。
+`Computer Configuration` -> `Policies` -> `Windows Settings` -> `Security Settings` -> `Local Policies` -> `Audit Policy`
+
+开启 `审核登录事件` ( `Audit logon events`) 与 `审核账户登录事件` ( `Audit account logon events` )，将成功 ( `Success`) 与失败 ( `Failure` )都勾选。
 
 ### DHCP 服务器
 
@@ -146,6 +156,19 @@ DHCP 新建作用域，地址范围为 `172.16.100.129` -- `172.16.100.254` ，�
 为 SDCServer 新建一个保留，MAC 地址去掉中间的 `-` 或 `:` ，IP 地址使用 `172.16.100.202`
 
 WINS 只要安装即可，不需要额外配置
+
+#### 故障转移
+
+另一台作为从机的 DHCP 不需要配置，在主机配置好故障转移后配置会自动同步过去
+
+在作用域上右键选择 `Configure failover`，在向导中选择从机，此处为 `SDCserver.ChinaSkills.cn`，按照以下配置填写
+
+![DHCP Failover](images/f35b1955d9cbce3fe81a756d3335966215c5f4594062e0668d3abc9feafb1693.png)  
+
+最后一栏的 `Shared Secret` 填写共享密钥，即密码
+
+![SDCserver DHCP](images/f03a27a60926d31023e4cd048dfe6f2d6101a07879fa3c9f814bbfed70a2e0ec.png)  
+
 
 ### 配置安全策略
 
@@ -204,7 +227,37 @@ for ($i = 1;$i -le 5;$i++)
 
 在 DNS 中增加一条 CNAME 记录，别名为 `print`，记录值指向 `dcserver.ChinaSkills.cn`
 
+### 备份
 
+正常其实应该用 Windows Backup 的，但是国赛答案不是这么给的，答案给的是手动复制 AD 数据库来备份
+
+所以只能做脚本了
+
+脚本如下 
+
+```bat
+xcopy c:\Windows\SYSVOL d:\SYSVOL /s /e /h /y
+xcopy c:\Windows\NTDS d:\NTDS  /s /e /h /y
+xcopy c:\Windows\NTDS \\chinaskills.cn\sd2020\backup\NTDS /s /e /h /y
+xcopy c:\Windows\SYSVOL \\chinaskills.cn\sd2020\backup /s /e /h /y
+```
+
+然后配置计划任务每天运行
+
+### Banner
+
+组策略两个策略
+
+- `Interactive logon: Message text for users attempting to log on`
+- `Interactive logon: Message title for users attempting to log on`
+
+其中 `title` 为标题，`text` 为内容
+
+### 禁止首次登录显示登录动画
+
+组策略导航到 `Computer Configuration` -> `Policies` -> `Administrative Templates` -> `System` -> `Logon`
+
+找到 `Show first sign-in animation` 修改为 Disabled
 
 ## SDCserver
 

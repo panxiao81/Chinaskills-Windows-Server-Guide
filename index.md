@@ -132,7 +132,6 @@ for($i = 1;$i -le 10;$i++)
 {
     Set-ADUser Finance$i -ProfilePath '\\ChinaSkills.cn\ChinaSkills20\Roaming Profile'
 }
-
 ```
 
 - 开启本地与域用户登录操作日志审计记录
@@ -214,6 +213,8 @@ for ($i = 1;$i -le 5;$i++)
 对于 Sales，新建组策略 GPO，导航至 `用户配置 -> 策略 -> Windows 设置 -> 安全设置 -> 软件限制策略`
 
 新建策略后，进入其他规则，将 `cmd` `powershell` 与 `regedit` 限制不允许使用
+
+关闭登录缓存，在组策略中 `Computer Settings -> Windows Settings -> Securtiy Settings -> Local Policies -> Securtiy Options` 找到 `Interactive logons: Number of previous logons to cache(in case domain controller is not available)`，将缓存数改为 0 即不允许缓存
 
 ### 安装并配置打印服务
 
